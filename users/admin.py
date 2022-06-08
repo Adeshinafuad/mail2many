@@ -81,5 +81,4 @@ class UserAdmin(BaseUserAdmin):
 
 # Now register the new UserAdmin...
 admin.site.register(CustomUser, UserAdmin)
-
 admin.site.unregister(Group)
