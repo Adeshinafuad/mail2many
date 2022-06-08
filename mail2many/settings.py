@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'client',
+    'common',
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -70,6 +72,11 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'mail2many.wsgi.application'
+
+
+
+AUTH_USER_MODEL = 'users.user'
+
 
 
 # Database

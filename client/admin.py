@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import User, Upload, Receipient
+from .models import EmailListUpload, EmailReceipientRelationship
 
 # Register your models here.
-admin.site.register(User)
-admin.site.register(Upload)
-admin.site.register(Receipient)
+admin.site.register(EmailListUpload)
+admin.site.register(EmailReceipientRelationship)

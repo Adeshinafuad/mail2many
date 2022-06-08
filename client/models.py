@@ -1,20 +1,14 @@
-import email
+from common import status
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
+from common.models import BaseModel
+from users.models import User
+    
 
-# Create your models here
-class User(AbstractBaseUser):
-    username = None
-    email = models.EmailField(('email address'), unique=True)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    is_staff = models.BooleanField(default=False)
-    password = models.CharField(max_length=50)
-    
-    def __str__(self):
-        return self.first_name + " " + self.last_name
-    
-class Upload(models.Model):
+
+def email_upload_status_file_path(instance, filename):
+    return f'payroll-validation-/{filename}'
+class EmailListUpload(BaseModel):
+    # uploader = models.ForeignKey(User, on_delete=models.CASCADE)
     mail_title = models.TextField(max_length=80)
     mail_text = models.TextField(max_length=320)
     upload_description = models.CharField(max_length=80)
@@ -22,17 +16,34 @@ class Upload(models.Model):
     spreadsheet = models.FileField(blank=False,null=False)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     sender_email = models.EmailField(blank=False,null=False)
-    
+
+    success_count = models.IntegerField(default=0, editable=False)
+    success_file = models.FileField(null=True, blank=True, editable=False,
+                                    upload_to=email_upload_status_file_path)
+    failure_count = models.IntegerField(default=0, editable=False)
+    failure_file = models.FileField(null=True, blank=True, editable=False,
+                                    upload_to=email_upload_status_file_path)
+
+    status = models.CharField(max_length=30, editable=False,
+                              default=status.UPLOAD_PROCESSING_STATUS,
+                              choices=status.UPLOAD_STATUSES)
+
     def __str__(self):
         return self.mail_title
     
-class Receipient(models.Model):
-    data = models.ForeignKey(Upload,on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
+class EmailReceipientRelationship(BaseModel):
+    email_upload_list = models.ForeignKey(EmailListUpload,on_delete=models.CASCADE)
+    recipient_name = models.CharField(max_length=50)
     reciever_email = models.EmailField(blank=False,null=False)
+    status = models.CharField(max_length=30, editable=False,
+                              choices=status.UPLOAD_STATUSES)
+    intended_message = models.CharField(max_length=50, null=True)
+
+    status_message = models.CharField(max_length=50, null=True)
+    
     
     def __str__(self):
-        return self.name
+        return self.recipient_name
     
     
     
