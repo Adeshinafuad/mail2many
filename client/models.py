@@ -1,7 +1,7 @@
 from common import status
 from django.db import models
 from common.models import BaseModel
-from users.models import User
+from users.models import CustomUser
     
 
 
@@ -14,7 +14,7 @@ class EmailListUpload(BaseModel):
     upload_description = models.CharField(max_length=80)
     timestamp = models.DateTimeField(auto_now_add=True)
     spreadsheet = models.FileField(blank=False,null=False)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     sender_email = models.EmailField(blank=False,null=False)
 
     success_count = models.IntegerField(default=0, editable=False)
